@@ -17,10 +17,10 @@ router.post('/login', async (req, res) => {
         };
     
         jwt.sign({user}, 'SECRETKEY@2020', {expiresIn: 60 * 60 * 24}, (err: any, token: any) => {
-            res.json({message: 'generete_token', token, status: true});
+            res.status(200).json({message: 'generete_token', token, status: true});
         });
     } else {
-        res.json({message: 'incorrect_user', status: false});
+        res.status(400).json({message: 'incorrect_user', status: false});
     }
 });
 

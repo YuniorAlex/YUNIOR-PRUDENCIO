@@ -6,17 +6,16 @@ import { Pedidosdet } from './entities/pedidosdet';
 import { authRole } from '../auth/middelware';
 const router = express.Router();
 
-router.post('/create', verifytoken, authRole(['1','2']), async (req, res) => {
+router.post('/create', verifytoken, authRole(['1','2']), async (req: any, res: any) => {
     try {
-        const { fechaPedido, fechaRecepcion, fechaDespacho, fechaEntrega, codVendedor, codRepartidor, codEstado, listaProductos } = req.body;
+        const { fechaPedido, listaProductos } = req.body;
         const pedidoCabRepository = AppDataSource.getRepository(Pedidoscab);
         const pedidoDetRepository = AppDataSource.getRepository(Pedidosdet);
 
         const pedidoCab = new Pedidoscab();
         pedidoCab.fechaPedido = fechaPedido,
-        pedidoCab.codVendedor = codVendedor;
-        pedidoCab.codEstado = codEstado;
-
+        pedidoCab.codVendedor = req.user.codigo;
+        pedidoCab.codEstado = '1';
 
         const queryRunner = AppDataSource.createQueryRunner();
         await queryRunner.connect();
@@ -49,7 +48,7 @@ router.post('/create', verifytoken, authRole(['1','2']), async (req, res) => {
     }
 });
 
-router.put('/actualizarEstado/:estado/:numPedido', verifytoken, authRole(['1','2','3','4']), async (req, res) => {
+router.put('/actualizarEstado/:estado/:numPedido', verifytoken, authRole(['1','3','4']), async (req: any, res: any) => {
     try {
         const { estado, numPedido } = req.params;
         const fecha = req.body.fecha;
@@ -72,18 +71,19 @@ router.put('/actualizarEstado/:estado/:numPedido', verifytoken, authRole(['1','2
                             break;
                         case '4':
                             updateRegistro.fechaEntrega = fecha;
+                            updateRegistro.codRepartidor = req.user.codigo
                             await pedidoCabRepository.save(updateRegistro)
                             break;
                     }
                     return res.status(200).json({ message: 'update_success', data: updateRegistro, status: true });
                 } else {
-                    return res.status(500).json({ message: 'estado_incorrecto', data: updateRegistro, status: false });
+                    return res.status(400).json({ message: 'estado_incorrecto', data: updateRegistro, status: false });
                 }
             } else {
-                return res.status(500).json({ message: 'no_existe_pedido', data: {}, status: true });
+                return res.status(400).json({ message: 'no_existe_pedido', data: {}, status: true });
             }
         }else{
-            return res.status(500).json({ message: 'formato_fecha_incorrecto', data: {}, status: true });
+            return res.status(400).json({ message: 'formato_fecha_incorrecto', data: {}, status: true });
         }
 
     } catch (error) {
