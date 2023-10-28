@@ -129,11 +129,29 @@
         "fechaPedido": "2023-10-28",
         "codVendedor": "77243621",
         "codEstado": "1",
+        "listaProductos": [
+            {
+                "sku": "15235646",
+                "nombre": "VESTIDO",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 75,
+                "undmedida": "UND"
+            },
+            {
+                "sku": "12456646",
+                "nombre": "ZAPATILLAS",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 250,
+                "undmedida": "UND"
+            }
+        ],
         "fechaRecepcion": null,
         "fechaDespacho": null,
         "fechaEntrega": null,
         "codRepartidor": null,
-        "numPedido": 1
+        "numPedido": 10
     },
     "status": true
   }
@@ -145,6 +163,15 @@
     "status": false
   }
 
+  - Respuesta recibida cuando el producto del pedido no existe.
+  400: {
+    "message": "producto_no_existe",
+    "data": {
+        "codProducto": "12436646"
+    },
+    "status": true
+  }
+
   - Respuesta recibida si usuario no tiene el permiso adecuado para operacion
   401: {
     "message": "permiso_denegado",
@@ -153,7 +180,7 @@
   ```
 #### Para actualizar el estado del pedido
 ```
-  POST http://localhost:5100/api/v1/pedidos/actualizarEstado/:estado/:numPedido
+  PUT http://localhost:5100/api/v1/pedidos/actualizarEstado/:estado/:numPedido
   ```
   - Dato enviado por el **Header**
   ```
@@ -227,4 +254,135 @@
     "message": "permiso_denegado",
     "status": false
   }
+  ```
+#### Para listar los pedidos
+```
+  GET http://localhost:5100/api/v1/pedidos/lista
+  ```
+  - Dato enviado por el **Header**
+  ```
+  'Authorization' : Bearer token
+  ```
+  - Respuestas Recibidas
+  ```
+  200: [
+    {
+        "numPedido": 1,
+        "fechaPedido": "2023-10-28T05:00:00.000Z",
+        "fechaRecepcion": "2023-10-28T17:01:00.000Z",
+        "fechaDespacho": null,
+        "fechaEntrega": null,
+        "codVendedor": "77243621",
+        "codRepartidor": null,
+        "codEstado": "2",
+        "listaProductos": [
+            {
+                "sku": "15235646",
+                "nombre": "VESTIDO",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 75,
+                "undmedida": "UND"
+            },
+            {
+                "sku": "15235446",
+                "nombre": "POLO",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 55,
+                "undmedida": "UND"
+            }
+        ]
+    },
+    {
+        "numPedido": 2,
+        "fechaPedido": "2023-10-28T05:00:00.000Z",
+        "fechaRecepcion": null,
+        "fechaDespacho": null,
+        "fechaEntrega": null,
+        "codVendedor": "77243621",
+        "codRepartidor": null,
+        "codEstado": "1",
+        "listaProductos": [
+            {
+                "sku": "15235646",
+                "nombre": "VESTIDO",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 75,
+                "undmedida": "UND"
+            },
+            {
+                "sku": "15235446",
+                "nombre": "POLO",
+                "tipo": "",
+                "etiqueta": "",
+                "precio": 55,
+                "undmedida": "UND"
+            }
+        ]
+    }
+]
+  ```
+
+#### Para listar los usuarios
+```
+  GET http://localhost:5100/api/v1/usuarios/lista
+  ```
+  - Dato enviado por el **Header**
+  ```
+  'Authorization' : Bearer token
+  ```
+  - Respuestas Recibidas
+  ```
+  200: [
+    {
+        "codigo": "77243621",
+        "nombre": "YUNIOR",
+        "email": "email01@hotmail.com",
+        "telefono": "942156478",
+        "puesto": "Admin",
+        "codRol": "1",
+        "rol": {
+            "codigo": "1",
+            "nombre": "Encargado"
+        }
+    },
+    {
+        "codigo": "77242621",
+        "nombre": "MARIA",
+        "email": "email02@hotmail.com",
+        "telefono": "942154478",
+        "puesto": "Vendedor",
+        "codRol": "2",
+        "rol": {
+            "codigo": "2",
+            "nombre": "Vendedor"
+        }
+    },
+    {
+        "codigo": "77233621",
+        "nombre": "LUIS",
+        "email": "email03@hotmail.com",
+        "telefono": "942356478",
+        "puesto": "Delibery",
+        "codRol": "3",
+        "rol": {
+            "codigo": "3",
+            "nombre": "Delivery"
+        }
+    },
+    {
+        "codigo": "77256621",
+        "nombre": "PEDRO",
+        "email": "email04@hotmail.com",
+        "telefono": "942146478",
+        "puesto": "Repartidor",
+        "codRol": "4",
+        "rol": {
+            "codigo": "4",
+            "nombre": "Repartidor"
+        }
+    }
+]
   ```
