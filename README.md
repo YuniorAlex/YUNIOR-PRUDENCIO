@@ -1,5 +1,7 @@
 # NODEJS API REST EXPRESS CON TYPEORM POSTGRESQL
 
+<p>El proyecto te permite iniciar sesion mendiante una validacion de token el cual permitira crear pedidos y actualizar los estados de los pedidos segun los roles que tenga el usuario logeado.</p>
+
 <p>Este Poryecto ha sido realizado con las siguientes herramientas.</p>
 
 - NodeJs
