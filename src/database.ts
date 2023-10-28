@@ -13,6 +13,6 @@ export const AppDataSource = new DataSource({
     port: 5432,
     database: 'db_boutique',
     entities: [Usuarios, Roles, Productos, Pedidoscab, Pedidosdet],
-    logging: true,
+    logging: false,
     synchronize: true
 })

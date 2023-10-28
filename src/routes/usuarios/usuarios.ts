@@ -1,10 +1,11 @@
 import express from 'express';
 import { Usuarios } from './entities/usuarios';
 import { CreateUsuario } from './interfaces/usuario';
+import { verifytoken } from '../auth/jwt.verify';
 const router = express.Router();
 
-router.get('/list', async (req, res) => {
-    res.send('asdsd');
+router.get('/list', verifytoken, async (req: any, res) => {
+    res.send('hola');
 });
 
 router.post('/create', async (req, res) => {

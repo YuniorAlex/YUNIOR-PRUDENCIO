@@ -1,29 +1,16 @@
-import {Entity,PrimaryColumn, Column, BaseEntity} from "typeorm"
+import {Entity,PrimaryColumn, Column, BaseEntity, ManyToOne, PrimaryGeneratedColumn, JoinColumn} from "typeorm"
+import { Pedidoscab } from "./pedidoscab";
 
 @Entity()
 export class Pedidosdet extends BaseEntity{
 
-    @PrimaryColumn()
-    numpedido: string;
+    @PrimaryGeneratedColumn()
+    id: string;
 
-    @Column()
-    fechapedido: Date;
+    @Column({ nullable: false })
+    codProducto: string;
 
-    @Column()
-    fecharecepcion: Date;
-
-    @Column()
-    fechadespacho: Date;
-
-    @Column()
-    fechaentrega: Date;
-
-    @Column()
-    codvendedor: string;
-
-    @Column()
-    codrepartidor: string;
-
-    @Column()
-    codestado: string;
+    @ManyToOne(() => Pedidoscab, (pedidosCab) => pedidosCab.listaProductos)
+    @JoinColumn({name: 'numPedido', referencedColumnName: 'numPedido'})
+    numPedido: Pedidoscab
 }

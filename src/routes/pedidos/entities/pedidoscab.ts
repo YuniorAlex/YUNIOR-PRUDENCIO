@@ -1,11 +1,33 @@
-import {Entity,PrimaryColumn, Column, BaseEntity} from "typeorm"
+import {Entity,PrimaryGeneratedColumn, Column, BaseEntity, OneToMany} from "typeorm"
+import { Pedidosdet } from "./pedidosdet";
 
 @Entity()
 export class Pedidoscab extends BaseEntity{
 
-    @PrimaryColumn()
-    numpedido: string;
+    @PrimaryGeneratedColumn()
+    numPedido: string;
 
     @Column()
-    codproducto: string;
+    fechaPedido: Date;
+
+    @Column({ nullable: true })
+    fechaRecepcion: Date;
+
+    @Column({ nullable: true })
+    fechaDespacho: Date;
+
+    @Column({ nullable: true })
+    fechaEntrega: Date;
+
+    @Column()
+    codVendedor: string;
+
+    @Column({ nullable: true })
+    codRepartidor: string;
+
+    @Column()
+    codEstado: string;
+
+    @OneToMany(() => Pedidosdet, (pedidosDet) => pedidosDet.numPedido)
+    listaProductos: Pedidosdet[]
 }
