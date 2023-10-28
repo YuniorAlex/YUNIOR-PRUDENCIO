@@ -1,6 +1,6 @@
 # NODEJS API REST EXPRESS CON TYPEORM POSTGRESQL
 
-<p>Este Poryecto a sido realizado con las siguientes herramientas.</p>
+<p>Este Poryecto ha sido realizado con las siguientes herramientas.</p>
 
 - NodeJs
 - Express
