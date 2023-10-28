@@ -93,4 +93,14 @@ router.put('/actualizarEstado/:estado/:numPedido', verifytoken, authRole(['1','3
     }
 });
 
+router.get('lista', verifytoken, async(req, res) => {
+    try {
+        
+    } catch (error) {
+        if (error instanceof Error) {
+            return res.status(500).json({ message: error.message, status: false });
+        }
+    }
+});
+
 export default router;
