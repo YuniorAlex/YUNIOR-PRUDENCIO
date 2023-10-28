@@ -54,7 +54,7 @@
   INSERT INTO productos(sku, nombre, tipo, etiqueta, precio, undmedida)
   VALUES ('15235646', 'VESTIDO', '', '', 75, 'UND');
   INSERT INTO productos(sku, nombre, tipo, etiqueta, precio, undmedida)
-  VALUES ('15235646', 'POLO', '', '', 55, 'UND');
+  VALUES ('15235446', 'POLO', '', '', 55, 'UND');
   INSERT INTO productos(sku, nombre, tipo, etiqueta, precio, undmedida)
   VALUES ('15685646', 'PANTALON', '', '', 120, 'UND');
   INSERT INTO productos(sku, nombre, tipo, etiqueta, precio, undmedida)
@@ -65,6 +65,14 @@
   VALUES ('15675646', 'CASACA', '', '', 150, 'UND');
   INSERT INTO productos(sku, nombre, tipo, etiqueta, precio, undmedida)
   VALUES ('12456646', 'ZAPATILLAS', '', '', 250, 'UND');
+
+### COMANDO PARA LA EJECUCION DEL PROYECTO Y CREACION DEL BUILD DE PRODUCCION
+- Comando para ejecutar el poyecto
+  ```
+  npm run dev
+- Comando para generar el build de produccion
+  ```
+  npm run tsc
 
 ### ENDPOINT'S DEL PROYECTO: ESTRUCTURA ENVIADA Y RESPUESTA
 #### Para el login y autenticacion
@@ -85,6 +93,7 @@
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNOTcsImV4cCI6MTY5ODU5NjA5N30.7z9gqo3mw33PXvXL3kokktbiVYTZFLpyWrt9ijyO2Rs",
     "status": true
   }
+
   400: {
     "message": "incorrect_user",
     "status": false
@@ -94,22 +103,128 @@
   ```
   POST http://localhost:5100/api/v1/pedidos/create
   ```
-  - Dato tipo Json enviado por el **Body**
+  - Dato enviado por el **Header**
+  ```
+  'Authorization' : Bearer token
+  ```
+  - Dato tipo Json enviado por el **Body**, Formato Fecha: "YYYY-mm-dd"
   ```
   {
-      "codigo": "77243621",
-      "nombre": "YUNIOR"
+   "fechaPedido": "2023-10-28",
+   "listaProductos":[
+    {
+      "codProducto": "15235646"
+    },
+    {
+      "codProducto": "15235446"
+    }
+   ]
+  }
+  ```
+  - Respuestas Recibidas
+  ```
+  200:  {
+    "message": "create_success",
+    "data": {
+        "fechaPedido": "2023-10-28",
+        "codVendedor": "77243621",
+        "codEstado": "1",
+        "fechaRecepcion": null,
+        "fechaDespacho": null,
+        "fechaEntrega": null,
+        "codRepartidor": null,
+        "numPedido": 1
+    },
+    "status": true
+  }
+
+  - Respuesta recibida si la fecha del pedido esta vacia
+  400: {
+    "message": "la sintaxis de entrada no es válida para tipo timestamp: «0NaN-NaN-NaNTNaN:NaN:NaN.NaN+NaN:NaN»",
+    "data": {},
+    "status": false
+  }
+
+  - Respuesta recibida si usuario no tiene el permiso adecuado para operacion
+  401: {
+    "message": "permiso_denegado",
+    "status": false
+  }
+  ```
+#### Para actualizar el estado del pedido
+```
+  POST http://localhost:5100/api/v1/pedidos/actualizarEstado/:estado/:numPedido
+  ```
+  - Dato enviado por el **Header**
+  ```
+  'Authorization' : Bearer token
+  ```
+  - Datos enviados por el **Path Variables**
+  ```
+  estado:
+    - 1 : Por atender
+    - 2 : En proceso
+    - 3 : En delivery
+    - 4 : Recibido
+
+  numPedido: El dato es recibido al crear el pedido del endpoint anterior.
+  ```
+  - Dato tipo Json enviado por el **Body**, Formato Fecha: "YYYY-mm-dd"
+  ```
+  {
+    "fecha": "2023-10-28"
   }
   ```
   - Respuestas Recibidas
   ```
   200: {
-    "message": "generete_token",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNOTcsImV4cCI6MTY5ODU5NjA5N30.7z9gqo3mw33PXvXL3kokktbiVYTZFLpyWrt9ijyO2Rs",
+    "message": "create_success",
+    "data": {
+        "fechaPedido": "2023-10-28",
+        "codVendedor": "77243621",
+        "codEstado": "1",
+        "fechaRecepcion": null,
+        "fechaDespacho": null,
+        "fechaEntrega": null,
+        "codRepartidor": null,
+        "numPedido": 1
+    },
     "status": true
   }
+
+  - Respuesta recibida si el estado enviado es menor al estado actual del pedido
   400: {
-    "message": "incorrect_user",
+    "message": "estado_incorrecto",
+    "data": {
+        "numPedido": 1,
+        "fechaPedido": "2023-10-27T05:00:00.000Z",
+        "fechaRecepcion": "2023-10-28T05:00:00.000Z",
+        "fechaDespacho": "2023-10-29T05:00:00.000Z",
+        "fechaEntrega": "2023-10-30T05:00:00.000Z",
+        "codVendedor": "77243621",
+        "codRepartidor": "77256621",
+        "codEstado": "4"
+    },
+    "status": false
+  }
+
+  - Respuesta recibida si el numero de pedido enviado no existe
+  400: {
+    "message": "no_existe_pedido",
+    "data": {},
+    "status": true
+  }
+
+  - Respuesta recibida si el formato de la fecha es incorrecta
+  400: {
+    "message": "formato_fecha_incorrecto",
+    "data": {},
+    "status": true
+  }
+
+  - Respuesta recibida si usuario no tiene el permiso adecuado para operacion
+  401: {
+    "message": "permiso_denegado",
     "status": false
   }
   ```
