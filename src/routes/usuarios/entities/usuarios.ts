@@ -1,4 +1,5 @@
-import {Entity,PrimaryColumn, Column, BaseEntity} from "typeorm"
+import {Entity,PrimaryColumn, Column, BaseEntity, ManyToOne, JoinColumn} from "typeorm"
+import { Roles } from "../../roles/entities/roles";
 
 @Entity()
 export class Usuarios extends BaseEntity{
@@ -20,4 +21,8 @@ export class Usuarios extends BaseEntity{
 
     @Column()
     codRol: string;
+
+    @ManyToOne(() => Roles, rol => rol.codigo)
+    @JoinColumn({name: 'codRol', referencedColumnName: 'codigo'})
+    rol: Roles;
 }
